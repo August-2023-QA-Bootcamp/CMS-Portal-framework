@@ -5,7 +5,7 @@
     <classes>
       <class name="pagesTest.HomePageTest">
         <methods>
-          <include name="clickLoginButtonTest"/>
+          <include name="use_of_isSelected_in_check_box"/>
           <include name="tearUp"/>
           <include name="setUP"/>
         </methods>
