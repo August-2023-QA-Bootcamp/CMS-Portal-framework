@@ -6,6 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -19,6 +22,7 @@ public class BaseClass {
 	// public ChromeDriver driver; // or we can use protected type
 	// public FirefoxDriver driver; // or we can use protected type
 	// public EdgeDriver driver; // or we can use protected type
+	public ChromeDriver driver; // or we can use protected type
 	public HomePage homePage; // or we can use protected type
 	
 	// Before start a test what need to do?
@@ -101,6 +105,11 @@ public class BaseClass {
 		
 		System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
 		driver = new ChromeDriver();
+		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/driver/chromedriver.exe");
+		
+		// We instantiated the driver here
+		driver = new ChromeDriver();
+
 		// maximize method is used to maximize the window -- mostly used
 		driver.manage().window().maximize();
 		// We can also use fullscreen() instead of maximize()
