@@ -53,6 +53,10 @@ public class HomePage {
 	@FindBy(id = "cms-forgot-userid")
 	WebElement forgotUserId;
 	
+
+	@FindBy(xpath = "//label[@id='cms-label-tc']")
+	WebElement checkBox;
+
 	// 3rd way to write the WebElement by "By Class" : Not common, here I used unlock web element from the home page
 	// instead of xpath, we can use id, name, class etc as locator.
 	By unlock = By.xpath("//a[text()='unlock']"); 
@@ -84,6 +88,46 @@ public class HomePage {
 	public void clickLogo() throws InterruptedException {
 		logo.click();
 		Thread.sleep(5000);
+
+	}
+	
+	// We are using sendKeys() method to input the text in any field
+	public void inputTextInUserIdField () {
+		userId.sendKeys("August 2023 QA Bootcamp"); // value always inside  " ", even if you use int type
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void clickWrongNewUserRegistration() {
+		wrongNewUserRegistration.click();
+		// We used try catch block to throw exception
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	// Use of common method clickElement(WebElement)
+	public void clickForgotUserId() {
+		clickElement(forgotUserId);
+	}
+	
+	// We are using both common action here
+	public void inputTextInUserIdAndPasswordFieldThenClickLoginButton() throws InterruptedException {
+		inputText(userId, "August 2023 QA Bootcamp");
+		inputText(password, "Enthrall@042023");
+		Thread.sleep(3000);
+		clickElement(checkBox);
+		Thread.sleep(3000);
+		clickElement(loginButton);
+		Thread.sleep(4000);
+	}
+	
 	}
 	
 	// We are using sendKeys() method to input the text in any field

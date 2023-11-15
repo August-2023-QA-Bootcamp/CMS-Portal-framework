@@ -4,7 +4,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 public class CommonActions {
-	
+
 	public static void clickElement(WebElement element) {
 		try {
 			element.click();
@@ -13,7 +13,7 @@ public class CommonActions {
 			System.out.println("Exception is: " + e);
 		}
 	}
-	
+
 	public static void inputText(WebElement element, String input) {
 		try {
 			element.sendKeys(input);
@@ -21,9 +21,14 @@ public class CommonActions {
 			f.printStackTrace();
 		}
 	}
+
+
+}
+
 	
 	
 	
 	
 
 }
+
