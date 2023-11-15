@@ -128,42 +128,6 @@ public class HomePage {
 		Thread.sleep(4000);
 	}
 	
-	}
-	
-	// We are using sendKeys() method to input the text in any field
-	public void inputTextInUserIdField () {
-		userId.sendKeys("August 2023 QA Bootcamp"); // value always inside  " ", even if you use int type
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void clickWrongNewUserRegistration() {
-		wrongNewUserRegistration.click();
-		// We used try catch block to throw exception
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	// Use of common method clickElement(WebElement)
-	public void clickForgotUserId() {
-		clickElement(forgotUserId);
-	}
-	
-	// We are using both common action here
-	public void inputTextInUserIdAndPasswordFieldThenClickLoginButton() throws InterruptedException {
-		inputText(userId, "May 2023 QA Bootcamp");
-		inputText(password, "Enthrall@042023");
-		Thread.sleep(3000);
-		clickElement(loginButton);
-		Thread.sleep(4000);
-	}
 	
 	// Not common, just for your reference
 	public void clickUnlock() throws InterruptedException {

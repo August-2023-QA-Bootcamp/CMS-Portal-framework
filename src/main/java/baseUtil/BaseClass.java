@@ -22,7 +22,7 @@ public class BaseClass {
 	// public ChromeDriver driver; // or we can use protected type
 	// public FirefoxDriver driver; // or we can use protected type
 	// public EdgeDriver driver; // or we can use protected type
-	public ChromeDriver driver; // or we can use protected type
+	
 	public HomePage homePage; // or we can use protected type
 	
 	// Before start a test what need to do?
