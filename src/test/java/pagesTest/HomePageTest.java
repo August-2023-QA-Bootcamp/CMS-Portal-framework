@@ -70,10 +70,6 @@ public class HomePageTest extends BaseClass {
 		homePage.clickUnlock();
 	}
 	
-	
-	
-	
-	
 	// From here, we are not creating method in HomePage Class to test
 	
 	// Important: Use of xpath as locator
@@ -188,7 +184,6 @@ public class HomePageTest extends BaseClass {
 		driver.findElement(By.tagName("header")).click(); // not a clickable element, just showed you
 	}
 	
-	
 	// Web Element: logo
 	// isDisplayed() is an alternate of click() method which is boolean type
 	// isDisplayed() is the method used to verify the presence of a web element within the web page.
@@ -255,8 +250,39 @@ public class HomePageTest extends BaseClass {
 
 
 	
+	// From here, we are not creating method in HomePage Class to test
 	
+	// Important: Use of xpath as locator
+	// Web Element: New User Registration Button
+	// We can use a web element directly in the test class, that is also common, but different people like different way
+	@Test (enabled = false)
+	public void use_of_xpath_as_locator_in_new_user_registration_button() throws InterruptedException {
+		driver.findElement(By.xpath("//a[contains(text(), 'New')]")).click();
+		Thread.sleep(4000);
+	}
 	
+
+	// This is best scripted in ebay (I will show it later)
+	// Important: Use of linkText as locator
+	// Web Element: forgot User Id
+	@Test(enabled = false)
+	public void use_of_linkText_as_locator_in_forgot_user_id_hyperlink() throws InterruptedException {
+		Thread.sleep(4000);
+		driver.findElement(By.linkText("User ID")).click();
+		Thread.sleep(4000);
+	}
+	
+	// Important: Use of partialLinkText as locator
+	// Web Element: forgot Password
+	@Test(enabled = true)
+	public void use_of_partialLinkText_as_locator_in_forgot_password_hyperlink() throws InterruptedException {
+		Thread.sleep(5000);
+		driver.findElement(By.partialLinkText("Passwor")).click();
+		Thread.sleep(4000);
+	}
+
+
+
 	
 	
 	
