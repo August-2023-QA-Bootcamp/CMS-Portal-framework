@@ -1,6 +1,8 @@
 package pagesTest;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import baseUtil.BaseClass;
@@ -231,7 +233,7 @@ public class HomePageTest extends BaseClass {
 		System.out.println("Is the Radio button selected? Ans: " + radioButtonNoSelected);
 	}
 	
-	@Test(enabled = true)
+	@Test(enabled = false)
 	public void use_of_isEnabled_in_login_button02() throws InterruptedException {
 		driver.findElement(By.name("user-d")).isDisplayed();
 		driver.findElement(By.name("user-d")).sendKeys("August 2023 QA Bootcamp");
@@ -246,6 +248,151 @@ public class HomePageTest extends BaseClass {
 		driver.findElement(By.name("Submit Login")).click();
 		Thread.sleep(4000);
 	}
+	
+	// how can you find the title of the page?
+	// Basically inside <head> tag, <title> tag is present, you can get it from there or
+	// right click on an empty place of any page -- click "view page source" -- ctrl+f (to find) 
+	// -- Type 'title' -- find the <title> tag
+	@Test(enabled = false)
+	public void use_of_getTitle_method_in_home_page() {
+		System.out.println("The Title of the page is: " + driver.getTitle());
+	}
+	
+	// We use New User Registration	
+	@Test(enabled = false)
+	public void use_of_getCurrentURL_method () throws InterruptedException {
+		driver.findElement(By.className("cms-newuser-reg")).click();
+		Thread.sleep(4000);
+		System.out.println("The current URL is: " + driver.getCurrentUrl());
+		System.out.println("The Title of the page is: " + driver.getTitle());
+	}
+	
+	//  Please see line 283 to learn getText()
+	@Test(enabled = false)
+	public void use_of_getText_method_in_login_button() throws InterruptedException {
+		driver.findElement(By.name("user-d")).isDisplayed();
+		driver.findElement(By.name("user-d")).sendKeys("August 2023 QA Bootcamp");
+		Thread.sleep(4000);
+		driver.findElement(By.name("pass-d")).isDisplayed();
+		driver.findElement(By.name("pass-d")).sendKeys("ABC@123");
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//label[@id='cms-label-tc']")).isSelected();
+		driver.findElement(By.xpath("//label[@id='cms-label-tc']")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.name("Submit Login")).isEnabled();
+		WebElement loginButton = driver.findElement(By.name("Submit Login"));
+		System.out.println("The text for the WebElement is: " + loginButton.getText());
+		driver.findElement(By.name("Submit Login")).click();
+		Thread.sleep(4000);
+	}
+	
+	// Here We used User ID field
+	// getAttribute() actually give the value of the Attribute, not common
+	@Test(enabled = false)
+	public void use_of_getAttribute_method () throws InterruptedException {
+		driver.findElement(By.name("user-d")).isDisplayed(); 
+		Thread.sleep(4000);
+		// TODO Nasir: placeholder is not working, need to fix
+		String value01 = driver.findElement(By.xpath("//input[@id='cms-login-userId']")).getAttribute("placeholder");
+		String value02 = driver.findElement(By.xpath("//input[@id='cms-login-userId']")).getAttribute("class");
+		String value03 = driver.findElement(By.xpath("//input[@id='cms-login-userId']")).getAttribute("id");
+		String value04 = driver.findElement(By.xpath("//input[@id='cms-login-userId']")).getAttribute("title");
+		System.out.println("The value of the placeholder attribute is: " + value01);
+		System.out.println("The value of the class attribute is: " + value02);
+		System.out.println("The value of the id attribute is: " + value03);
+		System.out.println("The value of the title attribute is: " + value04);
+	}
+	
+	// Use of clear() in line 313
+	// Using User Id field
+	// Some web site don't clear automatically, so you must test clear() in each text field
+	@Test(enabled = false)
+	public void use_of_sendKeys_method_then_clear() throws InterruptedException {
+		driver.findElement(By.name("user-d")).isDisplayed();
+		driver.findElement(By.name("user-d")).sendKeys("May 2023 QA Bootcamp");
+		Thread.sleep(4000);
+		driver.findElement(By.name("user-d")).clear();
+		Thread.sleep(4000);
+		driver.findElement(By.name("user-d")).sendKeys("August 2023 QA Bootcamp");
+		Thread.sleep(4000);
+		driver.findElement(By.name("user-d")).clear();
+		Thread.sleep(4000);
+	}
+	
+	// use of Keys.ENTER
+	// Click on forgot password field, then send a value inside "Enter user id" field and click by Enter key
+	@Test(enabled = false)
+	public void use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop () throws InterruptedException {
+		driver.findElement(By.xpath("//a[contains(text(), 'Pas')]")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.id("cms-forgotpwd-userId")).sendKeys("enthrall_12", Keys.ENTER);
+		Thread.sleep(4000);
+	}
+	
+	// use of Keys.RETURN
+	// Click on forgot password field, then send a value inside "Enter user id" field and click by Enter key
+	@Test(enabled = false)
+	public void use_of_sendKeys_method_then_click_by_return_key_of_the_laptop () throws InterruptedException {
+		driver.findElement(By.id("cms-forgot-password")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.id("cms-forgotpwd-userId")).sendKeys("enthrall_12", Keys.RETURN);
+		Thread.sleep(4000);
+	}
+
+	// use of navigate()
+	// Interview Question
+	@Test(enabled = false)
+	public void use_of_navigate_method () throws InterruptedException {
+		Thread.sleep(5000);
+		driver.navigate().to("https://portal.cms.gov/portal/help/digital/home");
+		Thread.sleep(4000);
+		driver.navigate().back();
+		Thread.sleep(4000);
+		driver.navigate().forward();
+		Thread.sleep(4000);
+		driver.navigate().refresh();
+		Thread.sleep(4000);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
