@@ -2,14 +2,18 @@ package baseUtil;
 
 import java.time.Duration;
 
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import pages.ForgotUserId;
 import pages.HomePage;
 import utils.Configuration;
 import static utils.IConstant.*;
@@ -18,6 +22,10 @@ public class BaseClass {
 	public WebDriver driver;
 	public HomePage homePage;
 	Configuration configuration;
+	public Dimension dimension;
+	public Actions actions;
+	public JavascriptExecutor js;
+	public ForgotUserId forgotUserId;
 	
 	@BeforeMethod
 	public void setUP() {
@@ -32,6 +40,8 @@ public class BaseClass {
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadWait));
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWait));
 		initClass();
+		actions = new Actions(driver);
+		js = (JavascriptExecutor) driver; // Memorize it
 	}
 	
 	public void initDriver() {
@@ -64,6 +74,7 @@ public class BaseClass {
 	
 	public void initClass() {
 		homePage = new HomePage(driver);
+		forgotUserId = new ForgotUserId(driver);
 	}
 	
 	@AfterMethod

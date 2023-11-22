@@ -1,9 +1,15 @@
 package pagesTest;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import baseUtil.BaseClass;
 
@@ -353,14 +359,259 @@ public class HomePageTest extends BaseClass {
 		driver.navigate().refresh();
 		Thread.sleep(4000);
 	}
+	
+	// Very important interview question
+	// How can you reset a window size? or they can ask how you can change the screen size by selenium
+	
+	@Test(enabled = false)
+	public void set_a_specific_size_for_window() throws InterruptedException {
+		Thread.sleep(4000);
+		// Will get the size of cms window
+		System.out.println("The size of the maximize screen is: "+ driver.manage().window().getSize());
+		dimension = new org.openqa.selenium.Dimension(1000, 700);
+		driver.manage().window().setSize(dimension);
+		Thread.sleep(4000);
+		System.out.println("The size of the set screen is: "+ driver.manage().window().getSize());
+		
+		// Extra related to this method, although you can skip
+		Thread.sleep(4000);
+		driver.navigate().to("https://www.cvs.com");
+		Thread.sleep(4000);
+		System.out.println("The size of the set screen is: "+ driver.manage().window().getSize());
+		driver.manage().window().maximize();
+		Thread.sleep(5000);
+		System.out.println("The size of the maximize screen is: "+ driver.manage().window().getSize());
+		Thread.sleep(5000);
+		driver.manage().window().setSize(dimension); // just to show again the set size
+		Thread.sleep(5000);
+		System.out.println("The size of the set screen is: "+ driver.manage().window().getSize());
+		Thread.sleep(5000);
+		driver.manage().window().fullscreen();
+		Thread.sleep(5000);
+		System.out.println("The size of the full screen is: "+ driver.manage().window().getSize());	
+	}
+	
+	// Sets the amount of time to wait for an asynchronous script to finish execution before throwing an error. 
+	// not important at all
+	@SuppressWarnings("deprecation")
+	@Test(enabled = false)
+	public void use_of_set_script_timeout_for_window() {
+		driver.manage().timeouts().setScriptTimeout(Duration.ofSeconds(15));
+		// setScriptTimeout () method deprecated, so giving you warning, this method is going to be out from selenium
+        // you use @SuppressWarnings("deprecation")
+		driver.get("https://www.ebay.com");	
+	}
+	
+	// We have to make a method for this in HomePage
+	@Test(enabled = false)
+	public void logoDisplayedTest01() {
+		homePage.logoDisplayed(); // Actual Outcome by selenium
+		Assert.assertTrue(true); // Expected Outcome
+	}
+	
+	@Test(enabled = false)
+	public void logoDisplayedTest02() {
+		homePage.logoDisplayed();  // Actual Result or outcome which doesn't match with your below expectation
+		Assert.assertTrue(false); // Expected Result // java.lang.AssertionError: expected [true] but found [false]
+		// Although the outcome is true, but because of difference between expected vs actual is not same, the test case failed
+	}
+	
+	// same as above, just we added message
+	@Test(enabled = false)
+	public void logoDisplayedTest03() {
+		homePage.logoDisplayed();  // Actual Result: true
+		Assert.assertTrue(false, "Application Logo is not Displayed");
+		// Assert.assertFalse(false, "Application Logo is not Displayed"); // false false means true
+		// Assert.assertTrue(true, "Application Logo is not Displayed"); // So, the message will show up when failed
+	}
+	
+	@Test (enabled = false)
+	public void logoDisplayedTest04 () {
+		homePage.logoDisplayed(); // Actual Result : true
+		Assert.assertFalse(true, "Application Logo is Displayed, but expected result is not to dispaly ..... ..... ");
+		// java.lang.AssertionError: Application Logo is not Displayed ..... .....  expected [false] but found [true]
+		// error message will be appeared when the assertion failed 
+	}
+	
+	// A regular title test in line 260
+	@Test(enabled = false)
+	public void use_of_getTitle_method01() throws InterruptedException {
+		String actual = driver.getTitle();
+		Thread.sleep(5000);	
+		System.out.println("The title of the Page is: " + actual);
+	}
+	
+	// will pass
+	@Test(enabled = false)
+	public void use_of_getTitle_method_with_assertion01() throws InterruptedException {
+		String actual = driver.getTitle();
+		System.out.println("The title of the Page is: " + actual);		
+		String expected = "CMS Enterprise Portal"; // Our expected Title
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match");
+		// Hard Assertion will not go to next line if failed, but move to next line when passed
+		String currentURL = driver.getCurrentUrl();
+		System.out.println("The current url is: " + currentURL);
+	}
+	
+	// Will fail
+	@Test(enabled = false)
+	public void use_of_getTitle_method_with_assertion02() throws InterruptedException {
+		String actual = driver.getTitle();
+		System.out.println("The title of the Page is: " + actual);		
+		String expected = "CMS Enterprise Portal           "; // Our expected Title
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match");
+		// Hard Assertion will not go to next line if failed, but move to next line when passed
+		String currentURL = driver.getCurrentUrl();
+		System.out.println("The current url is: " + currentURL);
+	}
+	
+	// Will Pass
+	@Test(enabled = false)
+	public void use_of_getTitle_method_with_assertion03() throws InterruptedException {
+		String actual = driver.getTitle();
+		System.out.println("The title of the Page is: " + actual);		
+		String expected = "CMS Enterprise Portal           "; // Our expected Title
+		
+		SoftAssert softAssert = new SoftAssert();
+		softAssert.assertEquals(actual, expected, "Home Page Title doesn't match");	
+		// Soft Assertion, execution will not stopped here if Assertion is failed in above line
+		String currentURL = driver.getCurrentUrl();
+		System.out.println("The current url is: " + currentURL);
+	}
 
+	// Very very important for use in framework and also a interview question
+	@Test(enabled = false)
+	public void use_of_mouse_hoverAction_on_ourLocations () throws InterruptedException {
+		Thread.sleep(4000);
+		driver.navigate().to("https://www.mountsinai.org/");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); 
+		WebElement ourLoations = driver.findElement(By.xpath("//a[normalize-space(text()) = 'Our Locations' and @class='hidden-xs dropdown']"));
+		Thread.sleep(4000);
+		// Actions actions = new Actions(driver); // We don't need it here
+		// Because Actions class is instantiated in base class, actions object came form there
+		actions.moveToElement(ourLoations).build().perform();
+		Thread.sleep(6000);	
+		
+	}
 	
+	// Regular click method
+	@Test(enabled = false)
+	public void use_of_click_method_in_loginButtonTest () throws InterruptedException {
+		driver.findElement(By.id("cms-login-submit")).click();
+		Thread.sleep(3000);
+	}
 	
+	// interview question: what are the alternative of click(), but they are not expecting this answer, they are looking for javascriptExecutor
+	// alternate of click()
+	@Test(enabled = false)
+	public void alternate_of_click_method_in_loginButtonTest01() throws InterruptedException {
+		driver.findElement(By.id("cms-login-submit")).sendKeys(Keys.ENTER);
+		Thread.sleep(3000);
+	}
 	
+	// alternate of click()
+	@Test(enabled = false)
+	public void alternate_of_click_method_in_loginButtonTest02() throws InterruptedException {
+		driver.findElement(By.id("cms-login-submit")).sendKeys(Keys.RETURN);
+		Thread.sleep(3000);
+	}
 	
+	// Important interview question + they ask you to write the code in MS word
+	// so, practice it by paper pen, then in ms word
+	// alternate of click()
+	@Test(enabled = false)
+	public void alternate_of_click_method_in_loginButtonTest03() throws InterruptedException {
+		WebElement loginButton = driver.findElement(By.id("cms-login-submit"));
+		// JavascriptExecutor js = (JavascriptExecutor) driver; // We don't need it here
+		// Because JavascriptExecutor Interface is instantiated in base class, js object came form there
+		js.executeScript("arguments[0].click()", loginButton);
+		// arguments[0] means, find the web element of index 0, first occurrence
+		Thread.sleep(4000);
+	}
 	
+	// alternate of click()
+	// "arguments[0].click()" ---> above is easy to memorize, memorize it, if you want
+	// follow the above one, because you can use any kind of locator 
+	// (specially xpath is difficult to create by below one)
+	// don't follow this one, but if you ever see it, i hope you can recognize it
+	@Test(enabled = false)
+	public void alternate_of_click_method_in_loginButtonTest04() throws InterruptedException {
+		js.executeScript("document.getElementById('cms-login-submit').click();");
+		Thread.sleep(4000);
+	}
 	
+	// From here till line 578, this is high level, so just see, don't take them seriously
+	// alternative to click an web element in many ways (never memorize, a collection of code)
 	
+	// Not important
+	
+	// alternate of click()
+	@Test(enabled = false)
+	public void homepageLoginButtonTest06() {
+		WebElement homepageLoginButton = driver.findElement(By.xpath("//button[@id='cms-login-submit']"));
+		actions.click(homepageLoginButton).perform();
+	}
+	
+	// Not important
+	// alternate of click()
+	@Test(enabled = false)
+	public void homepageLoginButtonTest07() {
+		WebElement homepageLoginButton = driver.findElement(By.xpath("//button[@id='cms-login-submit']"));
+		actions.moveToElement(homepageLoginButton).click().perform();
+	}
+
+	// Not important
+	// alternate of click()
+	@Test(enabled = false)
+	public void homepageLoginButtonTest08() {
+		WebElement homepageLoginButton = driver.findElement(By.xpath("//button[@id='cms-login-submit']"));
+		actions.clickAndHold(homepageLoginButton).release().perform();
+	}
+
+	// Not important
+	// alternate of click()
+	@Test(enabled = false)
+	public void homepageLoginButtonTest09() {
+		WebElement homepageLoginButton = driver.findElement(By.xpath("//button[@id='cms-login-submit']"));
+		actions.sendKeys(homepageLoginButton, Keys.RETURN).perform();
+	}
+	
+	// login process regular to compare with line 579
+	@Test(enabled = false)
+	public void use_of_sendKeys_method_then_click() throws InterruptedException {
+		driver.findElement(By.name("user-d")).sendKeys("August 2023 QA Bootcamp");
+		Thread.sleep(4000);
+		driver.findElement(By.name("pass-d")).sendKeys("ABC@123");
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//label[@id='cms-label-tc']")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.name("Submit Login")).click();
+		Thread.sleep(4000);
+	}
+	
+	// login process by JavascriptExecutor
+	// alternative of sendKeys(), please remember
+	@Test(enabled = true)
+	public void use_of_sendKeys_method_by_javascriptExecutor_then_click() throws InterruptedException {
+		WebElement userId = driver.findElement(By.name("user-d"));
+		WebElement password = driver.findElement(By.name("pass-d"));
+		WebElement checkBox = driver.findElement(By.xpath("//label[@id='cms-label-tc']"));
+		WebElement loginButton = driver.findElement(By.name("Submit Login"));
+		
+		// how to send text inside a field by JavascriptExecutor, alternate of sendKeys()
+		js.executeScript("arguments[0].value = 'August 2023 QA Bootcamp' ", userId); // Memorize it
+		Thread.sleep(4000);
+		js.executeScript("arguments[0].value = 'Abc@123213' ", password);
+		Thread.sleep(4000);
+		js.executeScript("arguments[0].click()", checkBox); // Memorize it
+		Thread.sleep(4000);
+		js.executeScript("arguments[0].click()", loginButton);
+		Thread.sleep(4000);		
+	}
+
+
+
 	
 	
 	

@@ -137,5 +137,12 @@ public class HomePage {
 		Thread.sleep(5000);
 	}
 	
+	public boolean logoDisplayed() {
+		return logo.isDisplayed();
+	}
+	
+	
+	
+	
 
 }
