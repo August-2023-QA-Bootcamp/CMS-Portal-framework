@@ -9,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -26,6 +28,8 @@ public class BaseClass {
 	public Actions actions;
 	public JavascriptExecutor js;
 	public ForgotUserId forgotUserId;
+	public Select select;
+	public WebDriverWait wait;
 	
 	@BeforeMethod
 	public void setUP() {
@@ -37,8 +41,10 @@ public class BaseClass {
 		// How can we convert a String to Long type
 		long pageLoadWait = Long.parseLong(configuration.getProperties(PAGELOAD_WAIT));
 		long implicitlyWait = Long.parseLong(configuration.getProperties(IMPLICITLY_WAIT));
+		long explicitlyWait = Long.parseLong(configuration.getProperties(EXPLICITLY_WAIT));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadWait));
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWait));
+		wait = new WebDriverWait(driver, Duration.ofSeconds(explicitlyWait));
 		initClass();
 		actions = new Actions(driver);
 		js = (JavascriptExecutor) driver; // Memorize it
