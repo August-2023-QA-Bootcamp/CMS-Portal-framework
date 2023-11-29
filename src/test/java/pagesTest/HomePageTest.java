@@ -4,6 +4,8 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.time.Duration;
+import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -808,7 +810,7 @@ public class HomePageTest extends BaseClass {
 			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 			driver.findElement(By.xpath("//button[contains(text(), 'Try it')]")).click();
 			Thread.sleep(4000);
-			Alert alert = driver.switchTo().alert();
+			Alert alert = driver.switchTo().alert(); // we can't use it in Base class, because after this it expects a popup, but in base class before each test no pop up
 			Thread.sleep(4000);
 			System.out.println("The text present in the alert is: " + alert.getText());
 			alert.accept();
@@ -819,7 +821,7 @@ public class HomePageTest extends BaseClass {
 		}
 		
 		// important for interview
-		@Test(enabled = true)
+		@Test(enabled = false)
 		public void web_based_alert_dismiss_test () throws InterruptedException {
 			Thread.sleep(5000);	
 			driver.get("http://softwaretestingplace.blogspot.com/2017/03/javascript-alert-test-page.html");
@@ -837,7 +839,464 @@ public class HomePageTest extends BaseClass {
 				
 		}
 		
-//TODO TOFAEL next class: start with authentication pop up [day07]
+		// HW given
+		// Another code for scrolling and then search for hidden web element [save this code]
+		@Test(enabled = true)
+		public void how_to_handle_hidden_element_by_javascriptExecutor02() throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.navigate().to("https://enthrallit.com/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+			// Click on Selenium from Header
+			Thread.sleep(4000);
+			driver.findElement(By.xpath("//a[text()='Selenium']")).click();
+			Thread.sleep(4000);
+			// Scrolling to see the web element
+			WebElement hideButton = driver.findElement(By.xpath("//button[@id='formButton3']"));
+			js.executeScript("arguments[0].scrollIntoView(true);", hideButton); 
+			Thread.sleep(5000);
+			// identify the 'Hide' element and click on it
+			// The search field will be disappeared, but we can pass value on it, as we get info before
+			js.executeScript("arguments[0].click();", hideButton); 
+			// identify element and set/input text or value by JavascriptExecutor
+			WebElement serchField = driver.findElement(By.xpath("//input[@class='form-control']//parent::form[@id='form3']"));
+			js.executeScript("arguments[0].value='January 2023' ", serchField);
+			Thread.sleep(4000);
+		}
+		
+		// Only important for interview
+		@Test(enabled = false)
+		public void authenticationPopUpTest () throws InterruptedException {
+			Thread.sleep(5000);	
+			String userName = "admin";
+			String password = "admin";
+			// original one is: "https://the-internet.herokuapp.com/basic_auth";
+			// Updated one is: "https://admin:admin@the-internet.herokuapp.com/basic_auth";
+			String url = "https://" + userName + ":" + password + "@" + "the-internet.herokuapp.com/basic_auth";
+			driver.get(url);
+			Thread.sleep(5000);	
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(5000);
+			
+			// The below part is not part of this test
+			// identify and get text after authentication of popup
+			String t = driver.findElement(By.tagName("p")).getText(); // we use tag name as a locator in our course
+			System.out.println("The Text is: " + t);
+		}
+		
+		// only important for interview
+		@Test(enabled = false)
+		public void use_of_right_click_action () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			WebElement rcButton = driver.findElement(By.xpath("//span[contains(text(), 'right click me')]"));
+			// Actions actions = new Actions(driver);
+			actions.moveToElement(rcButton).contextClick().build().perform(); // right click action
+			Thread.sleep(4000);
+			
+			// From Line 877, not part of testing, just completed the scenario
+			// Just keep below code, Can't find the web element for Edit at present, the line 877 is from my collection.
+			// Below 2 is not relevant to right click, just doing some extra, which we know already
+			// Next: I want to click on Edit link on the displayed menu options
+			WebElement edit = driver.findElement(By.xpath("//span[text()='Edit']"));
+			Thread.sleep(4000);
+			edit.click(); // a regular click, not a right click
+			Thread.sleep(4000);
+			// Switch to the alert box and click on OK button
+			Alert alert = driver.switchTo().alert();
+			System.out.println("\nAlert Text:" + alert.getText());
+			alert.accept();
+			Thread.sleep(4000);
+		}
+		
+		
+		// only important for interview
+		@Test(enabled = false)
+		public void use_of_double_click_action () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(4000);
+			WebElement dcButton = driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
+			actions.doubleClick(dcButton).build().perform(); // double click action
+			Thread.sleep(4000);
+			// Not part of the double click action
+			// Switch to the alert box and click on OK button
+			Alert alert = driver.switchTo().alert();
+			System.out.println("\nAlert Text:" + alert.getText());
+			alert.accept();
+			Thread.sleep(4000);
+		}
+		
+		// not important for interview
+		@Test(enabled = false)
+		public void use_of_drag_and_drop_action () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demo.guru99.com/test/drag_drop.html");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			// Element which needs to drag (Bank)
+			WebElement sourceLocator = driver.findElement(By.id("credit2")); // Web element of the Bank button, it will be dragged
+			// Element where need to be dropped.(In 'Account' field of debit side)
+			WebElement targetLocator = driver.findElement(By.xpath("//ol[@id='bank']")); // and it will be dropped here
+			// We Use Actions class for drag and drop.
+			actions.dragAndDrop(sourceLocator, targetLocator).build().perform();
+			Thread.sleep(5000);
+		}
+		
+		// not important
+		@Test(enabled = false)
+		public void use_of_slider_action () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demoqa.com/slider/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			// Retrieve WebElemnt 'slider' to perform mouse hover
+			// This is the field where volume is increased
+			WebElement slider = driver.findElement(By.cssSelector("input.range-slider.range-slider--primary"));
+			// Move mouse to x offset 50 i.e. in horizontal direction
+			Thread.sleep(5000);
+			// to test the slider is working or not
+			// dragAndDropBy (element, int xoffset, int yoffset)
+			actions.dragAndDropBy(slider, 50, 0).build().perform(); // learn from here, 50 is in pixel which might not match with real volume change, real volume 60
+			Thread.sleep(5000);
+			// slider.click();
+			System.out.println("Moved slider in horizontal directions");
+		}
+			
+		
+		// not important (alternate), also tough
+		@Test(enabled = false)
+		public void use_of_slider_action_alternate () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demoqa.com/slider/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			// Retrieve WebElemnt 'slider' to perform mouse hover
+			// This is the field where volume is increased
+			WebElement slider = driver.findElement(By.cssSelector("input.range-slider.range-slider--primary")); 
+			// Move mouse to x offset 65 i.e. in horizontal direction
+			Thread.sleep(5000);
+			// More tough than above
+			actions.clickAndHold(slider);
+			Thread.sleep(5000);
+			actions.moveByOffset(65, 0).build().perform(); // pixel 65, real volume 63
+			Thread.sleep(5000);
+			System.out.println("Moved slider in horizontal directions");
+			
+		}
+		
+		// Tough, try your best
+		@Test(enabled = false)
+		public void mouseHoverActionOnAboutUs() throws InterruptedException {
+			Thread.sleep(4000);
+			driver.navigate().to("https://www.mountsinai.org/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); 
+			WebElement aboutUs = driver.findElement(By.xpath("//a[normalize-space(text()) = 'About Us' and @class='hidden-xs dropdown']")); 
+			Thread.sleep(4000);
+			actions.moveToElement(aboutUs).build().perform();
+			Thread.sleep(4000); // Until here, we did it before
+			
+			// Use of findElements()
+			List<WebElement> listOfAboutUs = driver.findElements(By.xpath("//a[normalize-space(text()) = 'About Us' and @class='hidden-xs dropdown']//following-sibling::div//child::div//child::div"));
+			
+			for(int i =0; i <listOfAboutUs.size(); i++) {
+				System.out.println(listOfAboutUs.get(i).getText());
+			}
+		}
+		
+		/*
+		// same but another example from costco
+		@Test(enabled = true)
+		public void mouseHoverActionOnDeals() throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://www.costco.com/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			WebElement deals = driver.findElement(By.xpath("//a[@id='Home_Ancillary_2']"));
+			Thread.sleep(5000);
+			actions = new Actions(driver); 
+			actions.moveToElement(deals).build().perform();
+			Thread.sleep(5000);
+			List<WebElement> listofDeals =  driver.findElements(By.xpath("//a[@id='Home_Ancillary_2']//child::div//child::div//child::div//child::div//child::div"));
+			int numberOfElements = listofDeals.size();
+			System.out.println("Number of web Elements: "+ numberOfElements);
+			for(int i=0; i<numberOfElements; i++) {
+				System.out.println(listofDeals.get(i).getText());
+			}
+			// repeating 3 times, there is an issue
+			
+		}
+		*/
+		
+		// How to read the content of a Table 
+		@Test(enabled = false)
+		public void read_table () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://www.amazon.com");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(5000);
+			// Scrolled to the end of page
+			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+			Thread.sleep(5000);
+			// WebElement table = driver.findElement(By.tagName("table")); // we can use tag name too
+			WebElement table = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon")); 
+			System.out.println(table.getText());
+			Thread.sleep(5000);
+		}
+		
+		// How to read the row of a Table 
+		@Test(enabled = false)
+		public void readAnyRowofTheTable () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://www.amazon.com");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(5000);
+			actions = new Actions(driver); 
+			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+			Thread.sleep(5000);
+			WebElement row = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon tr:nth-child(1)"));
+			System.out.println(row.getText());
+			Thread.sleep(5000);
+		}
+		
+		// How to read a cell of a Table 
+		@Test(enabled = false)
+		public void readAnyCellOfARowofTheTable () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://www.amazon.com");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(10000);
+			//actions = new Actions(driver); 
+			actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+			Thread.sleep(5000);
+			WebElement cell = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon tr:nth-child(3) td:nth-child(1)"));
+			System.out.println(cell.getText());	
+			Thread.sleep(5000);
+		}
+		
+		@Test(enabled = false)
+		public void switchBetweenWindow01 () throws InterruptedException {
+			Thread.sleep(5000);	
+			String parentWindow = driver.getWindowHandle();
+			System.out.println("Parent Window ID: " + parentWindow + "\n");
+			Thread.sleep(3000);
+			WebElement learnMoreAbout = driver.findElement(By.xpath("//a[text()='Learn more about Enterprise Portal']"));
+			js.executeScript("arguments[0].scrollIntoView(true);", learnMoreAbout); // Please memorize it, semicolon after method and method name starts with lower case and follow camel case feature
+			Thread.sleep(5000);
+			js.executeScript("arguments[0].click()", learnMoreAbout);
+			js.executeScript("arguments[0].click()", learnMoreAbout); // clicking again 
+			// very very important interview question 100%:  How you handle windows from parent to child? 
+			// or how you can recognize the parent and child window	
+			// getWindowHandles() -- Get all window handles -- include parent + child = Total 3 here
+			// why we are using set? because we don't want duplicate, and set doesn't allow duplicate [a set of String]
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			System.out.println("Total Windows Opened: " + allWindowHandles.size()); 
+			// Extract Parent and child window from all window handles
+			String parent = (String)allWindowHandles.toArray()[0];
+			String child1 = (String)allWindowHandles.toArray()[1];
+			String child2 = (String)allWindowHandles.toArray()[2];
+			System.out.println("Parent Window ID: " + parent + "\n");
+			System.out.println("Child1 Window ID: " + child1 + "\n");
+			System.out.println("Child2 Window ID: " + child2 + "\n");
+			// Then switch from one window to other window (parent to child) by below
+			driver.switchTo().window(child1); // interview question
+			Thread.sleep(4000);
+			WebElement header = driver.findElement(By.xpath("//h1[text()=' CMS Enterprise Portal - Help Center']"));
+			System.out.println("The Text for the Web Element is: " + header.getText());
+			String actual = header.getText();
+			String expected = "CMS Enterprise Portal - Help Center";
+			Assert.assertEquals(actual, expected, "The driver didn't moved to the child 1 window");
+			//System.out.println("The driver moved to the child 1 window");
+		}
+		// see next switchBetweenWindow04 () and switchBetweenWindow05 ()
+		
+		@Test(enabled = false)
+		public void switchBetweenWindow02 () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://demoqa.com/browser-windows");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			String parentWindow = driver.getWindowHandle();
+			System.out.println("Parent Window ID: " + parentWindow + "\n");
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//button[text()='New Window']")).click();
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//button[text()='New Window']")).click();  // clicked twice to open 2 child window
+			Thread.sleep(3000);
+			// very very important interview question 100%:  How you handle windows from parent to child? 
+			// or how you can recognize the parent and child window	
+			// getWindowHandles() -- Get all window handles -- include parent + child = Total 3 here
+			// why we are using set? because we don't want duplicate, and set doesn't allow duplicate [a set of String]
+			Set <String> allWindowHandles =  driver.getWindowHandles();
+			System.out.println("Total Windows Opened: " + allWindowHandles.size()); 
+			// Extract Parent and child window from all window handles
+			String parent =(String)allWindowHandles.toArray()[0];
+			String child1 = (String)allWindowHandles.toArray()[1];
+			String child2 = (String)allWindowHandles.toArray()[2];
+			System.out.println("Parent Window ID: " + parent + "\n");
+			System.out.println("Child1 Window ID: " + child1 + "\n");
+			System.out.println("Child2 Window ID: " + child2 + "\n");
+			// Then switch from one window to other window (parent to child) by below
+			driver.switchTo().window(child1);
+			WebElement header = driver.findElement(By.id("sampleHeading"));
+			System.out.println("The Text for the Web Element is: " + header.getText());
+			System.out.println("The driver moved to the child 1 window");
+					
+		}
+		
+		// same way for moving from child to window for different url
+		@Test(enabled = false)
+		public void switchBetweenWindow03 () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://enthrallit.com");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			// to click seelenium
+			driver.findElement(By.xpath("//a[text()='Selenium']")).click();
+			Thread.sleep(3000);
+			
+			// This will scroll up the page by 1000 pixel vertically
+			Thread.sleep(4000); // used to see the scroll
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("window.scrollBy(0,1000)", ""); // scroll down
+			Thread.sleep(4000);
+			
+			String mainWindow = driver.getWindowHandle(); // learn this line
+			System.out.println("Main Window ID: " + mainWindow + "\n");
+			
+			// click on the Open Window button
+			driver.findElement(By.xpath("(//button[text()='Open Window'])[1]")).click();
+			Thread.sleep(5000);
+			// interview question:  How you handle windows from parent to child? or how you can recognize the parent and child window
+			
+			// Get all window handles -- include parent + child
+			// why we are using set? because we don't want duplicate, and set doesn't allow duplicate
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			System.out.println("Windows Open After Click: " + allWindowHandles.size());
+			
+			// Extract Parent and child window from all window handles
+			String parent = (String) allWindowHandles.toArray()[0]; // first index: parent
+			String child = (String) allWindowHandles.toArray()[1]; // second index: child 
+
+			//	Use window handle to switch from one window to other window (parent to child)
+			driver.switchTo().window(child); // switchTo() -- method is used to switch from one to another
+			System.out.println("The driver moved to the child window");
+			
+		}
+		
+		// different way for moving from child to window for different url
+		@Test(enabled = false)
+		public void switchBetweenWindow04 () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://enthrallit.com");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(7000);	
+			driver.findElement(By.xpath("//a[text()='Selenium']")).click();
+			Thread.sleep(3000);
+			
+			// This will scroll up the page by 1000 pixel vertically
+			Thread.sleep(4000); // used to see the scroll
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("window.scrollBy(0,1000)", ""); // scroll down
+			Thread.sleep(4000);
+			
+			String mainWindow = driver.getWindowHandle(); // learn this line
+			System.out.println("Main Window ID: " + mainWindow + "\n");
+			
+			// click on the Open Window button
+			driver.findElement(By.xpath("(//button[text()='Open Window'])[1]")).click();
+			Thread.sleep(5000);
+			
+			// interview question:  How you handle windows from parent to child? or how you can recognize the parent and child window
+			
+			// Get all window handles -- include parent + child
+			// why we are using set? because we don't want duplicate, and set doesn't allow duplicate
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			System.out.println("Total Windows Open: " + allWindowHandles.size());
+			
+			// for each loop, line 1284, get title and get current url is not related to this code
+			for (String wh : allWindowHandles) {
+				if (mainWindow.equals(wh)) {
+					System.out.println("\t Parent: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t \t" + driver.getTitle());
+				} else {
+					driver.switchTo().window(wh);
+					System.out.println("\t Child: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t \t" + driver.getTitle());
+				}
+			}		
+			
+		}
+		
+		// different way for moving from child to window for different url
+		@Test(enabled = false)
+		public void switchBetweenWindow05 () throws InterruptedException {
+			Thread.sleep(5000);	
+			driver.get("https://www.amerihealth.com/");
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+			Thread.sleep(7000);	
+			
+			WebElement careers = driver.findElement(By.xpath("//a[text()='Careers']"));
+			js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].scrollIntoView(true);", careers);
+			Thread.sleep(5000);
+			js.executeScript("arguments[0].click()", careers);
+			Thread.sleep(5000);
+			
+			String mainWindow = driver.getWindowHandle(); // learn this line
+			System.out.println("Main Window ID: " + mainWindow + "\n");
+			
+			// click on the see current job opening
+			driver.findElement(By.xpath("//a[text()='See current job openings']")).click();
+			Thread.sleep(5000);
+			
+			// interview question:  How you handle windows from parent to child? or how you can recognize the parent and child window
+			
+			// Get all window handles -- include parent + child
+			// why we are using set? because we don't want duplicate, and set doesn't allow duplicate
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			System.out.println("Total Windows Open: " + allWindowHandles.size());
+			
+			// for each loop, line 1284, get title and get current url is not related to this code
+			for (String wh : allWindowHandles) {
+				if (mainWindow.equals(wh)) {
+					System.out.println("\t Parent: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t \t" + driver.getTitle());
+				} else {
+					driver.switchTo().window(wh);
+					System.out.println("\t Child: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t \t" + driver.getTitle());
+				}
+			}	
+			
+			// type "QA" in find jobs and click on Search.	
+			WebElement findJobs = driver.findElement(By.xpath("//input[@id='keyword']"));
+			js.executeScript("arguments[0].value = 'Technician'", findJobs);
+			Thread.sleep(3000);
+			WebElement search = driver.findElement(By.xpath("//span[text()='Search']"));
+			js.executeScript("arguments[0].click()", search);
+			Thread.sleep(5000);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+
 			
 }
 
