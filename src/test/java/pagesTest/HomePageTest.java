@@ -6,15 +6,21 @@ import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -841,7 +847,7 @@ public class HomePageTest extends BaseClass {
 		
 		// HW given
 		// Another code for scrolling and then search for hidden web element [save this code]
-		@Test(enabled = true)
+		@Test(enabled = false)
 		public void how_to_handle_hidden_element_by_javascriptExecutor02() throws InterruptedException {
 			Thread.sleep(5000);	
 			driver.navigate().to("https://enthrallit.com/");
@@ -990,6 +996,7 @@ public class HomePageTest extends BaseClass {
 			
 		}
 		
+		// Use of findElements()
 		// Tough, try your best
 		@Test(enabled = false)
 		public void mouseHoverActionOnAboutUs() throws InterruptedException {
@@ -1119,6 +1126,7 @@ public class HomePageTest extends BaseClass {
 		}
 		// see next switchBetweenWindow04 () and switchBetweenWindow05 ()
 		
+		// 2 and 3 hw for next time
 		@Test(enabled = false)
 		public void switchBetweenWindow02 () throws InterruptedException {
 			Thread.sleep(5000);	
@@ -1227,12 +1235,12 @@ public class HomePageTest extends BaseClass {
 			// for each loop, line 1284, get title and get current url is not related to this code
 			for (String wh : allWindowHandles) {
 				if (mainWindow.equals(wh)) {
-					System.out.println("\t Parent: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
-							+ "\n \t Title: \t \t" + driver.getTitle());
+					System.out.println("\t Parent: \t" + wh + "\n \t URL: \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t" + driver.getTitle());
 				} else {
 					driver.switchTo().window(wh);
-					System.out.println("\t Child: \t" + wh + "\n \t URL: \t \t" + driver.getCurrentUrl()
-							+ "\n \t Title: \t \t" + driver.getTitle());
+					System.out.println("\t Child: \t" + wh + "\n \t URL: \t" + driver.getCurrentUrl()
+							+ "\n \t Title: \t" + driver.getTitle());
 				}
 			}		
 			
@@ -1247,6 +1255,7 @@ public class HomePageTest extends BaseClass {
 			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 			Thread.sleep(7000);	
 			
+			// Career at the bottom of the page
 			WebElement careers = driver.findElement(By.xpath("//a[text()='Careers']"));
 			js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView(true);", careers);
@@ -1257,7 +1266,7 @@ public class HomePageTest extends BaseClass {
 			String mainWindow = driver.getWindowHandle(); // learn this line
 			System.out.println("Main Window ID: " + mainWindow + "\n");
 			
-			// click on the see current job opening
+			// click on the "see current job opening"
 			driver.findElement(By.xpath("//a[text()='See current job openings']")).click();
 			Thread.sleep(5000);
 			
@@ -1290,11 +1299,170 @@ public class HomePageTest extends BaseClass {
 			
 		}
 		
+		// regarding TestNG
+		// use of groups
+		@Test(enabled = false, priority = 1, groups = {"functionalTest", "sanityTest", "smokeTest", "regressionTest"})
+		public void use_of_getTitle_method_with_assertion11() throws InterruptedException {
+			// Your expected Title
+			String expected = "CMS Enterprise Portal";
+			String actual = driver.getTitle();
+			System.out.println("The Title of the home Page is: " + actual);
+			Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");  
+			// Hard Assertion will not go to next line of failed, but move to next line when passed
+			String currentURL = driver.getCurrentUrl();
+			System.out.println("The current url is: " + currentURL);		
+		}
 		
+		@Test(enabled = false, priority = 1, groups = {"regressionTest"})
+		public void use_of_getTitle_method_with_assertion12() throws InterruptedException {
+			// Your expected Title
+			String expected = "CMS Enterprise Portal           ";
+			String actual = driver.getTitle();
+			System.out.println("The Title of the home Page is: " + actual);
+			Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");  // Hard Assertion, execution stopped here if Assertion fail
+			// Hard Assertion will not go to next line of failed, but move to next line when passed
+			String currentURL = driver.getCurrentUrl();
+			System.out.println("The current url is: " + currentURL);
+			
+		}
 		
+		@Test(enabled = false, priority = 1, groups = {"sanityTest", "regressionTest"})
+		public void use_of_getTitle_method_with_assertion13() throws InterruptedException {
+			String expected = "A CMS Enterprise Portal"; // WHICH is wrong
+			String actual = driver.getTitle();
+			System.out.println("Home Page Title is: "+actual);
+			SoftAssert softAssert = new SoftAssert(); 	// Soft Assertion, mainly interview question, not used generally
+			softAssert.assertEquals(actual, expected, "Home Page Title doesn't match ..." );
+			String currentURL =	driver.getCurrentUrl();
+			System.out.println("The current url from priority 3 is: "+currentURL);
 		
+		}
 		
+		@Test (enabled = false, priority = 4, groups = {"smokeTest", "sanityTest", "functionalTest", "regressionTest"})
+		public void logoTest(){
+			WebElement logo = driver.findElement(By.xpath("//em[@id='cms-homepage-header-logo-unauth' and @class='cms-icon cms-sprite-loggedout ms-3']"));
+			boolean flag = logo.isDisplayed();
+			System.out.println("Is the logo displayed? Ans: "+flag);
+			Assert.assertTrue(true, "Application Logo is not displayed .....");	// error message will be appeared when the assertion failed 
 		
+		}
+		
+		@Test(enabled = false)
+		public void use_of_expectedExceptions01 () {
+			System.out.println("We can verify whether a code throws the expected exception or not. Here it will fail");
+			int i = 1/0;	
+		}
+		
+		@Test(enabled = false, expectedExceptions = ArithmeticException.class)
+		public void use_of_expectedExceptions02 () {
+			System.out.println("We can verify whether a code throws the expected exception or not. Here it will Pass");
+			int i = 1/0;	
+		}
+		
+		// use of expectedExceptions
+		// Login button
+		@Test(enabled = false, expectedExceptions = org.openqa.selenium.NoSuchElementException.class)
+		public void use_of_expectedExceptions03 () throws InterruptedException {
+			driver.findElement(By.id("xxx-login-submit")).click();
+			Thread.sleep(4000);
+		}
+		
+		@Test (enabled = false)
+		public void new_user_registration_button_enabled(){
+			WebElement nur = driver.findElement(By.xpath("//a[contains(text(), 'New User Registration')]"));
+			boolean buttonEnabled = nur.isEnabled();			
+			System.out.println("Is the Button Enabled? Ans: "+ buttonEnabled);
+			Assert.assertTrue(true, "The New User Registration Button is disable .....");	
+		}
+		
+		// use of dependsOnMethods
+		// we have to keep the above method true to run this
+		@Test(enabled = false, dependsOnMethods = "new_user_registration_button_enabled")
+		public void newUserRegistrationButtonClickTest() throws InterruptedException {
+			driver.findElement(By.xpath("//a[contains(text(), 'New User Registration')]")).click();
+			Thread.sleep(4000);
+		}
+		// change the new_user_registration_button_enabled method to fail 
+		// and see the above method skipped as it depends on new_user_registration_button_enabled
+		
+		// This test to explain the next one
+		@Test(enabled = false)
+		public void nonSkipHomePageTitleTest() {
+			String expected = "CMS Enterprise Portal";
+			String actual = driver.getTitle();
+			System.out.println("home page title is: " + actual);
+			Assert.assertEquals(actual, expected, "Home Page Title doesn't match...");	
+			System.out.println("No need to skip the test");
+		}	
+		
+		// how to handle Exception: try, catch, throw, throws, finally
+		// below examples of where 'throw' is used
+		// Que: How to skip a test? by throw new SkipException() method
+		@Test(enabled = false)
+		public void skipHomePageTitleTest01() {
+			String expected = "CMS Enterprise Portal";
+			if(expected.equals(driver.getTitle())) {
+				throw new SkipException("Skipping -- as the title matches as expected");
+			} else {
+				System.out.println("Home Page Title doesn't match...");
+			}
+			System.out.println("I am out of the if else condition");
+		}
+		
+		@Test(enabled = false)
+		public void skipHomePageTitleTest02() {
+			// expected is different than actual
+			String expected = "CMS Enterprise Portal           "; // title will not match
+			if(expected.equals(driver.getTitle())) {
+				throw new SkipException("Skipping -- as the title matches as expected");
+			} else {
+				System.out.println("Home Page Title doesn't match...");
+			}
+			System.out.println("I am out of the if else condition");
+		}	
+		
+		// use of invocation count, when? -- if you know some test cases fail for no reason
+		// and then you fix it, you can run more than one time time by invocation count	
+		@Test (enabled = false, priority = 1, invocationCount = 10, timeOut = 10000)
+		public void titleTest04() {	
+			String expected = "CMS Enterprise Portal";
+			String actual = driver.getTitle();
+			System.out.println("Home Page Title is: "+actual);
+			Assert.assertEquals(actual, expected, "Home Page Title doesn't match ...");
+			System.out.println("Thread: "+ Thread.currentThread().getName()); // to know which thread is running
+		}
+
+		// use of threadPoolSize
+		//TODO Is the threadPoolSize working? No, NEED TO RESOLVED, 
+		// may be working as multi threaded, can't see, need to be make sure
+		// Ask Nasir to solve it
+		@Test (enabled = true, priority = 2, invocationCount = 9, threadPoolSize = 3, timeOut = 10000)
+		public void titleTest() {	
+			String expected = "CMS Enterprise Portal";
+			String actual = driver.getTitle();
+			System.out.println("Home Page Title is: "+actual);
+			Assert.assertEquals(actual, expected, "Home Page Title doesn't match ...");
+			System.out.println("Thread: "+ Thread.currentThread().getName()); // to know which thread is running
+
+		}
+		
+		// Tough, don't try to understand the code, just understand the concept: time+condition+frequency
+		// very rare Interview question, generally not used in industry
+		@Test (enabled = false)
+		public void logoTest04() throws InterruptedException {
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+					.withTimeout(Duration.ofSeconds(20))
+					.pollingEvery(Duration.ofSeconds(5))
+					.ignoring(NoSuchElementException.class); // line ends here
+			WebElement logo = wait.until(new Function<WebDriver, WebElement>() {
+				public WebElement apply(WebDriver driver) {
+					return driver.findElement(
+							By.xpath("//em[@id='cms-homepage-header-logo-unauth' and @class='cms-icon cms-sprite-loggedout ms-3']"));
+				}
+			});
+			logo.isDisplayed();
+		}
+
 		
 
 			
